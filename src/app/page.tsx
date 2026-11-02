@@ -13,6 +13,8 @@ import {
   ChevronDown,
 } from "lucide-react";
 import gsap from "gsap";
+import FeaturedProperties from "@/components/FeaturedProperties"; 
+
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState<"buy" | "rent">("buy");
@@ -264,6 +266,7 @@ export default function Home() {
       </footer>
 
       <div id="news" className="anchor-target" />
+      <FeaturedProperties />
     </main>
   );
 }
