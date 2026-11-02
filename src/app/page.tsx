@@ -2,16 +2,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import dynamic from "next/dynamic";
-import { ArrowRight, Search, Menu, X } from "lucide-react";
+import { ArrowRight, Search, Menu, X, Building2 } from "lucide-react";
 import gsap from "gsap";
 import type { FormEvent } from "react";
-
-
-const PropertyScene = dynamic(
-  () => import("@/components/PropertyScene"),
-  { ssr: false }
-);
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState<"buy" | "rent">("buy");
@@ -21,54 +14,65 @@ export default function Home() {
   const [searchMessage, setSearchMessage] = useState("");
 
   useEffect(() => {
-    const timeline = gsap.timeline({
-      defaults: { ease: "power3.out" },
+    const ctx = gsap.context(() => {
+      const timeline = gsap.timeline({
+        defaults: { ease: "power3.out" },
+      });
+
+      timeline
+        .fromTo(".navbar", { y: -25, opacity: 0 }, {
+          y: 0, opacity: 1, duration: 0.8,
+        })
+        .fromTo(".hero-content > *", { y: 30, opacity: 0 }, {
+          y: 0, opacity: 1, duration: 0.8, stagger: 0.12,
+        }, "-=0.35")
+        // .fromTo(".property-visual", { opacity: 0, scale: 1.05 }, {
+        //   opacity: 1, scale: 1, duration: 1.5,
+        // }, "-=1")
+        .fromTo(".property-visual", { scale: 1.04 }, {
+          scale: 1, duration: 1.5,
+        }, "-=1")
+        .fromTo(".search-panel", { y: 25, opacity: 0 }, {
+          y: 0, opacity: 1, duration: 0.8,
+        }, "-=0.7")
+        .fromTo(".hero-footer", { opacity: 0 }, {
+          opacity: 1, duration: 0.7,
+        }, "-=0.3");
+
+      gsap.to(".property-visual", {
+        y: -8,
+        duration: 5,
+        repeat: -1,
+        yoyo: true,
+        ease: "sine.inOut",
+      });
     });
 
-    timeline
-      .fromTo(
-        ".navbar",
-        { y: -30, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.9 }
-      )
-      .fromTo(
-        ".hero-content > *",
-        { y: 35, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.85, stagger: 0.13 },
-        "-=0.45"
-      )
-      .fromTo(
-        ".search-panel",
-        { y: 30, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.8 },
-        "-=0.45"
-      )
-      .fromTo(
-        ".scene-container",
-        { opacity: 0, scale: 0.88 },
-        { opacity: 1, scale: 1, duration: 1.3 },
-        "-=1"
-      );
-
-    return () => {
-      timeline.kill();
-    };
+    return () => ctx.revert();
   }, []);
 
-  const handleSearch = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  function handleSearch(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
 
     setSearchMessage(
-      `Searching ${activeTab === "buy" ? "properties to buy" : "properties to rent"} in ${location || "all locations"} — ${budget}.`
+      `Searching properties to ${activeTab} in ${
+        location.trim() || "all locations"
+      } — ${budget}.`
     );
-  };
+  }
+
+  function closeMenu() {
+    setMenuOpen(false);
+  }
 
   return (
     <main className="terravista">
       <header className="navbar">
-        <a href="/" className="brand">
-          <div className="brand-mark">T</div>
-          <div>
+        <a href="#home" className="brand">
+          <div className="brand-icon">
+            <Building2 size={42} strokeWidth={1.2} />
+          </div>
+          <div className="brand-copy">
             <span className="brand-small">THE</span>
             <span className="brand-name">TERRAVISTA</span>
             <span className="brand-tagline">YOUR FUTURE, ELEVATED</span>
@@ -76,27 +80,33 @@ export default function Home() {
         </a>
 
         <nav className={menuOpen ? "nav-links mobile-open" : "nav-links"}>
-          <a className="active" href="/">Home</a>
-          <a href="#buyers">Buyers</a>
-          <a href="#properties">Properties</a>
-          <a href="#news">News</a>
-          <a href="#contact">Contact</a>
+          <a className="active" href="#home" onClick={closeMenu}>Home</a>
+          <a href="#buyers" onClick={closeMenu}>Buyers</a>
+          <a href="#properties" onClick={closeMenu}>Properties</a>
+          <a href="#news" onClick={closeMenu}>News</a>
+          <a href="#contact" onClick={closeMenu}>Contact</a>
         </nav>
 
-        <a href="#contact" className="contact-button">
-          Contact
-        </a>
+        <a href="#contact" className="contact-button">Contact</a>
 
         <button
           className="mobile-menu"
           onClick={() => setMenuOpen(!menuOpen)}
           aria-label="Toggle navigation"
+          aria-expanded={menuOpen}
         >
-          {menuOpen ? <X /> : <Menu />}
+          {menuOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
       </header>
 
-      <section className="hero">
+      <section className="hero" id="home">
+        <div
+          className="property-visual"
+          id="properties"
+          role="img"
+          aria-label="Modern luxury villa with glass architecture and warm exterior lighting"
+        />
+
         <div className="hero-content">
           <span className="eyebrow">REAL ESTATE</span>
 
@@ -113,20 +123,20 @@ export default function Home() {
           </p>
 
           <a href="#properties" className="explore-button">
-            Explore Now <ArrowRight size={18} />
+            Explore Now
+            <ArrowRight size={19} />
           </a>
         </div>
 
-        <div className="scene-container">
-          <PropertyScene />
-        </div>
-
-        <form className="search-panel" onSubmit={handleSearch}>
+        <form className="search-panel" onSubmit={handleSearch} id="buyers">
           <div className="search-tabs">
             <button
               type="button"
               className={activeTab === "buy" ? "selected" : ""}
-              onClick={() => setActiveTab("buy")}
+              onClick={() => {
+                setActiveTab("buy");
+                setSearchMessage("");
+              }}
             >
               Buy
             </button>
@@ -134,7 +144,10 @@ export default function Home() {
             <button
               type="button"
               className={activeTab === "rent" ? "selected" : ""}
-              onClick={() => setActiveTab("rent")}
+              onClick={() => {
+                setActiveTab("rent");
+                setSearchMessage("");
+              }}
             >
               Rent
             </button>
@@ -145,7 +158,7 @@ export default function Home() {
               <span>Location</span>
               <input
                 value={location}
-                onChange={(e) => setLocation(e.target.value)}
+                onChange={(event) => setLocation(event.target.value)}
                 placeholder="Enter your preferred location"
               />
             </label>
@@ -154,7 +167,7 @@ export default function Home() {
               <span>Pricing</span>
               <select
                 value={budget}
-                onChange={(e) => setBudget(e.target.value)}
+                onChange={(event) => setBudget(event.target.value)}
               >
                 <option>Any price</option>
                 <option>Below $100,000</option>
@@ -169,20 +182,22 @@ export default function Home() {
               className="search-button"
               aria-label="Search properties"
             >
-              <Search size={21} />
+              <Search size={22} />
             </button>
           </div>
 
           {searchMessage && (
-            <p className="search-feedback">{searchMessage}</p>
+            <p className="search-feedback" role="status">
+              {searchMessage}
+            </p>
           )}
         </form>
       </section>
 
-      <div className="hero-footer">
+      <footer className="hero-footer">
         <span>EXCEPTIONAL PROPERTIES. EXTRAORDINARY LIVING.</span>
         <span>01 — 01</span>
-      </div>
+      </footer>
     </main>
   );
 }
