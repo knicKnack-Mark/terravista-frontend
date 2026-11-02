@@ -16,8 +16,8 @@ import {
   MapPin,
   Clock3,
   CheckCircle2,
+  Menu,
 } from "lucide-react";
-
 const stats = [
   {
     label: "TOTAL PROPERTIES",
