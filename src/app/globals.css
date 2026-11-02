@@ -1,13 +1,11 @@
 
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap');
-
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap");
 @import "tailwindcss";
 
 :root {
-  --background: #050505;
-  --foreground: #f7f5f2;
-  --gold: #b68b5e;
-  --gold-light: #d1ac80;
+  --gold: #c49a6c;
+  --gold-light: #e5c195;
+  --background: #030303;
   --muted: #aaa5a0;
 }
 
@@ -17,33 +15,27 @@
   padding: 0;
 }
 
-html,
-body {
+html {
   width: 100%;
   min-height: 100%;
-  margin: 0;
-  padding: 0;
-  background: #030303;
-  color: #f7f5f2;
-}
-
-html {
+  background: var(--background);
   scroll-behavior: smooth;
 }
 
 body {
-  font-family: "DM Sans", sans-serif;
+  min-height: 100vh;
+  min-height: 100svh;
   overflow-x: hidden;
+  background: var(--background);
+  color: #f7f5f2;
+  font-family: "DM Sans", sans-serif;
 }
 
-button,
-input,
-select {
+button, input, select {
   font: inherit;
 }
 
-button,
-a {
+button, a {
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -54,75 +46,80 @@ a {
 
 .terravista {
   position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
   width: 100%;
   min-height: 100vh;
   min-height: 100svh;
-  margin: 0;
-  padding: 45px 5.5% 35px;
+  padding: 28px 5%;
   overflow: hidden;
   background: #030303;
-  border-radius: 0;
 }
+
+/* HEADER */
 
 .navbar {
   position: relative;
-  z-index: 10;
-  display: flex;
-  justify-content: space-between;
+  z-index: 20;
+  display: grid;
+  grid-template-columns: 190px 1fr 190px;
   align-items: center;
-  min-height: 100px;
+  min-height: 105px;
 }
 
 .brand {
   display: flex;
   flex-direction: column;
   align-items: center;
-  min-width: 130px;
+  justify-self: start;
+  width: 145px;
   color: var(--gold-light);
 }
 
-.brand-mark {
-  font-family: "Playfair Display", serif;
-  font-size: 58px;
-  line-height: 0.9;
-  font-weight: 600;
-  border-bottom: 2px solid var(--gold);
-  padding: 0 15px 8px;
+.brand-icon {
+  height: 48px;
+  display: grid;
+  place-items: center;
+}
+
+.brand-copy {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .brand-small {
-  display: block;
-  margin-top: 7px;
-  text-align: center;
+  font-family: "Playfair Display", serif;
   font-size: 9px;
   letter-spacing: 4px;
 }
 
 .brand-name {
-  display: block;
   font-family: "Playfair Display", serif;
-  font-size: 16px;
+  font-size: 18px;
   letter-spacing: 3px;
+  font-weight: 600;
 }
 
 .brand-tagline {
-  display: block;
   margin-top: 3px;
-  font-size: 6px;
-  letter-spacing: 2px;
+  font-size: 7px;
+  letter-spacing: 1.5px;
 }
 
 .nav-links {
   display: flex;
+  justify-content: center;
   align-items: center;
-  gap: 48px;
-  margin-left: 35px;
+  gap: clamp(22px, 4vw, 65px);
 }
 
 .nav-links a {
-  color: #aaa7a4;
+  position: relative;
+  color: #aaa6a2;
   font-size: 15px;
-  transition: color 0.3s ease;
+  transition: color 0.3s;
 }
 
 .nav-links a:hover,
@@ -130,29 +127,46 @@ a {
   color: #fff;
 }
 
+.nav-links a::after {
+  position: absolute;
+  bottom: -9px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: var(--gold-light);
+  content: "";
+  transition: width 0.3s;
+}
+
+.nav-links a:hover::after,
+.nav-links a.active::after {
+  width: 100%;
+}
+
 .contact-button,
 .explore-button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 12px;
-  border: 1px solid rgba(207, 167, 126, 0.3);
+  gap: 13px;
+  border: 1px solid rgba(207, 167, 126, 0.35);
   border-radius: 50px;
-  background: linear-gradient(110deg, #33272a, #805d40);
-  color: white;
-  transition: transform 0.3s ease, filter 0.3s ease;
+  background: linear-gradient(110deg, #38292b, #936a46);
+  color: #fff;
+  transition: transform 0.3s, filter 0.3s;
 }
 
 .contact-button {
-  min-width: 190px;
-  padding: 17px 30px;
+  justify-self: end;
+  width: 185px;
+  min-height: 58px;
   font-size: 15px;
 }
 
 .explore-button {
-  width: 255px;
-  min-height: 58px;
-  margin-top: 29px;
+  width: 265px;
+  min-height: 59px;
+  margin-top: 30px;
   font-size: 16px;
 }
 
@@ -165,119 +179,152 @@ a {
 .mobile-menu {
   display: none;
   background: transparent;
-  border: none;
+  border: 0;
   color: white;
   cursor: pointer;
 }
 
+/* HERO */
+
 .hero {
   position: relative;
+  isolation: isolate;
   display: flex;
+  flex: 1;
   align-items: center;
-  min-height: 590px;
-  margin-top: 30px;
+  min-height: 620px;
+  margin-top: 5px;
 }
 
 .hero-content {
   position: relative;
-  z-index: 3;
-  width: 56%;
-  padding-bottom: 20px;
+  z-index: 4;
+  width: 57%;
+  max-width: 760px;
+  padding-bottom: 55px;
 }
 
 .eyebrow {
   display: block;
-  margin-bottom: 18px;
-  color: #e5c59e;
-  font-size: 13px;
+  margin-bottom: 20px;
+  color: var(--gold-light);
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 1.5px;
+  letter-spacing: 2px;
 }
 
 .hero-content h1 {
-  max-width: 690px;
-  font-size: clamp(34px, 4vw, 50px);
-  line-height: 1.15;
+  max-width: 780px;
+  color: #f8f7f6;
+  font-size: clamp(40px, 4.3vw, 66px);
   font-weight: 600;
-  letter-spacing: -1.8px;
+  letter-spacing: -2.5px;
+  line-height: 1.08;
 }
 
 .hero-content p {
-  max-width: 570px;
-  margin-top: 16px;
-  color: #aaa6a2;
-  font-size: 14px;
-  line-height: 1.8;
+  max-width: 600px;
+  margin-top: 22px;
+  color: #aaa5a0;
+  font-size: 15px;
+  line-height: 1.9;
 }
 
-.scene-container {
+/* VILLA IMAGE */
+
+
+.property-visual {
   position: absolute;
-  z-index: 2;
-  top: 30px;
-  right: -2%;
-  width: 62%;
-  height: 610px;
-  background: transparent;
-  pointer-events: auto;
+  z-index: 1;
+  top: -20px;
+  right: -5.5%;
+  width: 75%;
+  height: calc(100% + 30px);
+  background-color: #111;
+  background-image:
+    linear-gradient(
+      90deg,
+      #030303 0%,
+      rgba(3, 3, 3, 0.78) 12%,
+      rgba(3, 3, 3, 0.12) 48%,
+      transparent 70%
+    ),
+    linear-gradient(
+      0deg,
+      #030303 0%,
+      transparent 22%,
+      transparent 85%,
+      #030303 100%
+    ),
+    url("https://images.unsplash.com/photo-1758448756207-54505680d130?auto=format&fit=crop&w=2000&q=85");
+
+  background-size: cover;
+  background-position: center right;
+  background-repeat: no-repeat;
+
+  opacity: 1;
+  pointer-events: none;
 }
 
-.property-scene,
-.property-scene canvas {
-  width: 100% !important;
-  height: 100% !important;
-  background: transparent !important;
-}
+
+/* SEARCH PANEL */
 
 .search-panel {
   position: absolute;
-  z-index: 5;
-  bottom: 12px;
+  z-index: 6;
+  bottom: 5px;
   left: 0;
-  width: min(720px, 72%);
-  background: linear-gradient(110deg, #27190e, #36200f);
-  border: 1px solid rgba(192, 145, 97, 0.13);
+  width: min(850px, 70%);
+  background: linear-gradient(
+    110deg,
+    rgba(48, 29, 16, 0.96),
+    rgba(63, 37, 18, 0.93)
+  );
+  border: 1px solid rgba(192, 145, 97, 0.2);
+  box-shadow: 0 20px 70px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(18px);
 }
 
 .search-tabs {
   display: flex;
-  height: 61px;
-  background: #17100b;
   width: fit-content;
+  height: 65px;
+  background: rgba(15, 10, 7, 0.65);
 }
 
 .search-tabs button {
-  width: 100px;
-  border: none;
+  width: 118px;
+  border: 0;
   background: transparent;
   color: #aaa29b;
   cursor: pointer;
-  transition: background 0.3s;
+  transition: background 0.3s, color 0.3s;
 }
 
 .search-tabs button.selected {
-  background: #342213;
+  background: #382516;
   color: white;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .search-fields {
   display: grid;
-  grid-template-columns: 1fr 1fr 70px;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 65px;
   align-items: center;
-  padding: 19px 22px;
-  gap: 22px;
+  gap: 25px;
+  padding: 22px 26px;
 }
 
 .search-field {
   display: flex;
   flex-direction: column;
-  gap: 7px;
   min-width: 0;
+  gap: 10px;
 }
 
 .search-field + .search-field {
-  border-left: 1px solid rgba(255,255,255,0.16);
-  padding-left: 22px;
+  padding-left: 27px;
+  border-left: 1px solid rgba(255, 255, 255, 0.15);
 }
 
 .search-field span {
@@ -290,117 +337,140 @@ a {
 .search-field select {
   width: 100%;
   min-width: 0;
-  border: none;
-  outline: none;
+  border: 0;
+  outline: 0;
   background: transparent;
-  color: #b9afa5;
-  font-size: 13px;
+  color: #c5b9ad;
+  font-size: 14px;
 }
 
 .search-field input::placeholder {
   color: #a99c90;
 }
 
+.search-field select {
+  cursor: pointer;
+}
+
 .search-field select option {
-  color: #222;
+  background: #28180d;
+  color: #fff;
 }
 
 .search-button {
   display: grid;
-  width: 54px;
-  height: 54px;
+  width: 62px;
+  height: 62px;
   place-items: center;
-  border: none;
-  background: #79583a;
-  color: white;
+  border: 0;
+  background: #8b6745;
+  color: #fff;
   cursor: pointer;
-  transition: background 0.3s;
+  transition: background 0.3s, transform 0.3s;
 }
 
 .search-button:hover {
+  transform: translateY(-2px);
   background: #a47b50;
 }
 
 .search-feedback {
-  padding: 0 22px 15px;
+  padding: 0 26px 17px;
   color: #e3c29e;
   font-size: 12px;
+  line-height: 1.6;
 }
+
+/* FOOTER */
 
 .hero-footer {
+  position: relative;
+  z-index: 5;
   display: flex;
   justify-content: space-between;
-  margin-top: 12px;
-  color: #71665c;
-  font-size: 9px;
-  letter-spacing: 2px;
+  align-items: center;
+  margin-top: 18px;
+  color: #b18b60;
+  font-size: 10px;
+  letter-spacing: 2.2px;
 }
 
-@media (max-width: 1000px) {
-  .terravista {
-    width: calc(100% - 40px);
-    padding: 35px 5%;
+/* TABLET */
+
+@media (max-width: 1050px) {
+  .navbar {
+    grid-template-columns: 145px 1fr 130px;
   }
 
   .nav-links {
-    gap: 20px;
+    gap: 19px;
+  }
+
+  .nav-links a {
+    font-size: 13px;
   }
 
   .contact-button {
-    min-width: 130px;
+    width: 125px;
   }
 
   .hero-content {
     width: 65%;
   }
 
-  .scene-container {
-    right: -10%;
-    width: 65%;
+  .hero-content h1 {
+    font-size: clamp(38px, 5vw, 55px);
+  }
+
+  .property-visual {
+    right: -12%;
+    width: 78%;
   }
 
   .search-panel {
-    width: 85%;
+    width: 82%;
   }
 }
 
+/* MOBILE */
+
 @media (max-width: 700px) {
   .terravista {
-    width: 100%;
-    min-height: 100vh;
-    margin: 0;
-    padding: 20px 22px 30px;
-    border-radius: 0;
+    padding: 17px 22px 24px;
   }
 
   .navbar {
+    display: flex;
+    justify-content: space-between;
     min-height: 70px;
   }
 
   .brand {
-    min-width: 100px;
-    align-items: flex-start;
+    width: 120px;
   }
 
-  .brand-mark {
-    font-size: 36px;
-    padding: 0 8px 4px;
+  .brand-icon {
+    height: 35px;
   }
 
-  .brand-small {
-    font-size: 7px;
+  .brand-icon svg {
+    width: 30px;
+    height: 30px;
   }
 
   .brand-name {
-    font-size: 12px;
+    font-size: 15px;
   }
 
   .brand-tagline {
-    font-size: 5px;
+    font-size: 6px;
   }
 
   .mobile-menu {
-    display: block;
+    display: grid;
+    width: 43px;
+    height: 43px;
+    place-items: center;
   }
 
   .contact-button {
@@ -409,14 +479,13 @@ a {
 
   .nav-links {
     position: absolute;
-    top: 80px;
+    top: 75px;
     left: 0;
     right: 0;
     display: none;
     flex-direction: column;
     align-items: stretch;
     gap: 0;
-    margin: 0;
     padding: 12px 20px;
     background: #15110e;
     border: 1px solid #453426;
@@ -427,44 +496,67 @@ a {
   }
 
   .nav-links a {
-    padding: 13px 0;
+    padding: 14px 0;
+    font-size: 14px;
+  }
+
+  .nav-links a::after {
+    display: none;
   }
 
   .hero {
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    min-height: unset;
-    margin-top: 55px;
+    min-height: auto;
+    margin-top: 45px;
   }
 
   .hero-content {
     width: 100%;
+    max-width: none;
     padding: 0;
   }
 
+  .eyebrow {
+    margin-bottom: 15px;
+    font-size: 12px;
+  }
+
   .hero-content h1 {
-    font-size: clamp(32px, 9vw, 44px);
-    letter-spacing: -1px;
+    font-size: clamp(34px, 9vw, 47px);
+    letter-spacing: -1.5px;
+    line-height: 1.1;
   }
 
   .hero-content p {
+    margin-top: 17px;
     font-size: 13px;
   }
 
   .explore-button {
-    width: 210px;
-    min-height: 52px;
+    width: 215px;
+    min-height: 53px;
     margin-top: 22px;
   }
 
-  .scene-container {
+  .property-visual {
     position: relative;
     top: auto;
     right: auto;
-    width: 115%;
-    height: 350px;
-    margin: 5px -7.5% 0;
+    width: calc(100% + 44px);
+    height: 330px;
+    margin: 12px -22px 0;
+    background-position: center;
+    background-image:
+      linear-gradient(
+        0deg,
+        #030303 0%,
+        transparent 25%,
+        transparent 80%,
+        #030303 100%
+      ),
+      url("https://images.unsplash.com/photo-1758448756207-54505680d130?auto=format&fit=crop&w=1200&q=85");
   }
 
   .search-panel {
@@ -474,85 +566,41 @@ a {
     margin-top: -5px;
   }
 
+  .search-tabs {
+    height: 55px;
+  }
+
+  .search-tabs button {
+    width: 95px;
+  }
+
   .search-fields {
     grid-template-columns: 1fr;
-    gap: 18px;
+    gap: 19px;
     padding: 20px;
   }
 
   .search-field + .search-field {
-    border-left: none;
-    border-top: 1px solid rgba(255,255,255,0.15);
-    padding: 15px 0 0;
+    padding: 17px 0 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+    border-left: 0;
   }
 
   .search-button {
     width: 100%;
-    height: 48px;
+    height: 49px;
   }
 
   .hero-footer {
-    margin-top: 30px;
+    gap: 12px;
+    margin-top: 27px;
     font-size: 8px;
+    letter-spacing: 1px;
   }
 }
 
-/* TERRAVISTA FULLSCREEN OVERRIDES */
-
-html,
-body {
-  width: 100%;
-  min-height: 100%;
-  background: #030303 !important;
-}
-
-.terravista {
-  width: 100% !important;
-  min-height: 100vh;
-  min-height: 100svh;
-  margin: 0 !important;
-  border-radius: 0 !important;
-}
-
-.hero {
-  min-height: 620px;
-}
-
-.scene-container {
-  position: absolute;
-  z-index: 2;
-  top: 30px;
-  right: -2%;
-  width: 62%;
-  height: 610px;
-  background: transparent;
-  pointer-events: auto;
-}
-
-.property-scene,
-.property-scene canvas {
-  width: 100% !important;
-  height: 100% !important;
-  background: transparent !important;
-}
-
-@media (max-width: 1000px) {
-  .terravista {
-    width: 100% !important;
-    margin: 0 !important;
-  }
-}
-
-@media (max-width: 700px) {
-  .hero {
-    min-height: auto;
-  }
-
-  .scene-container {
-    top: auto;
-    right: auto;
-    width: 115%;
-    height: 350px;
-    margin: 5px -7.5% 0;
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
   }
 }
