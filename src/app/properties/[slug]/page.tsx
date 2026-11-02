@@ -46,7 +46,7 @@ export default async function PropertyDetailsPage({ params }: PageProps) {
 
         <nav>
           <Link href="/">Home</Link>
-          <Link href="/#featured">Properties</Link>
+          <Link href="/#properties">Properties</Link>
           <Link href="/#contact">Contact</Link>
         </nav>
 
