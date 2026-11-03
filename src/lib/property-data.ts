@@ -1,26 +1,7 @@
-
 import "server-only";
 
 import { prisma } from "@/lib/prisma";
-
-export type PropertyView = {
-  id: number;
-  slug: string;
-  title: string;
-  location: string;
-  price: string;
-  type: "buy" | "rent";
-  category: string;
-  bedrooms: number;
-  bathrooms: number;
-  area: string;
-  lotArea: string;
-  image: string;
-  gallery: string[];
-  description: string;
-  amenities: string[];
-  featured: boolean;
-};
+import type { PropertyView } from "@/types/property";
 
 function toPropertyView(property: {
   id: number;
@@ -86,7 +67,7 @@ export async function getActiveProperties(): Promise<PropertyView[]> {
 }
 
 export async function getPropertyBySlug(
-  slug: string,
+  slug: string
 ): Promise<PropertyView | null> {
   const property = await prisma.property.findFirst({
     where: {
