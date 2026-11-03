@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import type { PropertyView } from "@/lib/property-data";
+import type { PropertyView } from "@/types/property";
 
 type Props = {
   properties: PropertyView[];
