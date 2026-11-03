@@ -14,7 +14,7 @@ import {
   SlidersHorizontal,
   X,
 } from "lucide-react";
-import { properties } from "@/data/properties";
+import type { PropertyView } from "@/lib/property-data";
 
 type PropertyType = "all" | "buy" | "rent";
 type SortOption = "featured" | "price-low" | "price-high" | "name";
@@ -25,7 +25,13 @@ function getNumericPrice(price: string) {
   return Number(price.replace(/[^\d.]/g, "")) || 0;
 }
 
-export default function PropertyListingPage() {
+type PropertyListingPageProps = {
+  properties: PropertyView[];
+};
+
+export default function PropertyListingPage({
+  properties,
+}: PropertyListingPageProps) {
   const [search, setSearch] = useState("");
   const [propertyType, setPropertyType] = useState<PropertyType>("all");
   const [priceRange, setPriceRange] = useState("any");
@@ -118,7 +124,7 @@ export default function PropertyListingPage() {
           return Number(Boolean(b.featured)) - Number(Boolean(a.featured));
       }
     });
-  }, [search, propertyType, priceRange, bedrooms, sortBy]);
+  }, [properties, search, propertyType, priceRange, bedrooms, sortBy]);
 
   const totalPages = Math.max(
     1,
