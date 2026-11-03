@@ -14,7 +14,7 @@ import {
   SlidersHorizontal,
   X,
 } from "lucide-react";
-import type { PropertyView } from "@/lib/property-data";
+import type { PropertyView } from "@/types/property";
 
 type PropertyType = "all" | "buy" | "rent";
 type SortOption = "featured" | "price-low" | "price-high" | "name";
