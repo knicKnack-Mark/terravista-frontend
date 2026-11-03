@@ -12,22 +12,16 @@ import {
   ShieldCheck,
   CalendarDays,
 } from "lucide-react";
-import { properties } from "@/data/properties";
+import { getPropertyBySlug } from "@/lib/property-data";
 import PropertyInquiryForm from "@/components/PropertyInquiryForm";
 
 type PageProps = {
   params: Promise<{ slug: string }>;
 };
 
-export function generateStaticParams() {
-  return properties.map((property) => ({
-    slug: property.slug,
-  }));
-}
-
 export default async function PropertyDetailsPage({ params }: PageProps) {
   const { slug } = await params;
-  const property = properties.find((item) => item.slug === slug);
+  const property = await getPropertyBySlug(slug);
 
   if (!property) {
     notFound();
