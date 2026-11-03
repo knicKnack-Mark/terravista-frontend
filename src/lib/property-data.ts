@@ -1,5 +1,7 @@
+
 import "server-only";
 
+import { connection } from "next/server";
 import { prisma } from "@/lib/prisma";
 import type { PropertyView } from "@/types/property";
 
@@ -53,6 +55,8 @@ function toPropertyView(property: {
 }
 
 export async function getActiveProperties(): Promise<PropertyView[]> {
+  await connection();
+
   const properties = await prisma.property.findMany({
     where: {
       status: "ACTIVE",
@@ -69,6 +73,8 @@ export async function getActiveProperties(): Promise<PropertyView[]> {
 export async function getPropertyBySlug(
   slug: string
 ): Promise<PropertyView | null> {
+  await connection();
+
   const property = await prisma.property.findFirst({
     where: {
       slug,
