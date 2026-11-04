@@ -2823,3 +2823,412 @@ button {
     font-size: 7px;
   }
 }
+/* Buyers page */
+.buyers-page {
+  background: #0b0b0a;
+  color: #f4f0e8;
+  overflow: hidden;
+}
+
+.buyers-container {
+  width: min(1180px, calc(100% - 48px));
+  margin-inline: auto;
+}
+
+.buyers-hero {
+  min-height: 690px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  isolation: isolate;
+  border-bottom: 1px solid rgba(210, 174, 119, 0.16);
+}
+
+.buyers-hero__image {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background:
+    linear-gradient(90deg, rgba(8, 9, 8, 0.94) 0%, rgba(8, 9, 8, 0.75) 44%, rgba(8, 9, 8, 0.2) 100%),
+    linear-gradient(0deg, rgba(8, 9, 8, 0.4), transparent 40%),
+    url("https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=2200&q=90")
+      center 52% / cover;
+}
+
+.buyers-hero__content {
+  padding-block: 110px 90px;
+}
+
+.buyers-eyebrow {
+  margin: 0 0 22px;
+  color: #c8a878;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  line-height: 1.5;
+  text-transform: uppercase;
+}
+
+.buyers-hero h1,
+.buyers-intro h2,
+.buyers-section-heading h2,
+.buyers-considerations h2,
+.buyers-cta h2 {
+  margin: 0;
+  font-family: var(--font-playfair), Georgia, serif;
+  font-weight: 400;
+  letter-spacing: -0.045em;
+  line-height: 1.08;
+}
+
+.buyers-hero h1 {
+  max-width: 760px;
+  font-size: clamp(56px, 8vw, 100px);
+}
+
+.buyers-hero h1 em,
+.buyers-intro h2 em,
+.buyers-section-heading h2 em,
+.buyers-considerations h2 em,
+.buyers-cta h2 em {
+  color: #c8a878;
+  font-weight: 400;
+}
+
+.buyers-hero__description {
+  max-width: 490px;
+  margin: 28px 0 0;
+  color: rgba(244, 240, 232, 0.76);
+  font-size: 15px;
+  line-height: 1.9;
+}
+
+.buyers-hero__actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 28px;
+  margin-top: 34px;
+}
+
+.buyers-button {
+  min-height: 50px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 22px;
+  padding: 0 22px;
+  border: 1px solid transparent;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+  transition: background 180ms ease, color 180ms ease, border-color 180ms ease;
+}
+
+.buyers-button--light {
+  background: #c8a878;
+  color: #11110f;
+}
+
+.buyers-button--light:hover {
+  background: #e0c69d;
+}
+
+.buyers-text-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: #f4f0e8;
+  font-size: 12px;
+  text-decoration: none;
+}
+
+.buyers-text-link:hover {
+  color: #c8a878;
+}
+
+.buyers-hero__note {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 74px;
+  color: rgba(244, 240, 232, 0.56);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.buyers-hero__line {
+  width: 38px;
+  height: 1px;
+  background: #c8a878;
+}
+
+.buyers-intro {
+  display: grid;
+  grid-template-columns: 1.1fr 0.7fr;
+  gap: 100px;
+  padding-block: 120px;
+}
+
+.buyers-intro h2,
+.buyers-section-heading h2,
+.buyers-considerations h2,
+.buyers-cta h2 {
+  font-size: clamp(38px, 5vw, 62px);
+}
+
+.buyers-intro__copy {
+  align-self: end;
+  max-width: 440px;
+  color: rgba(244, 240, 232, 0.7);
+  font-size: 14px;
+  line-height: 1.9;
+}
+
+.buyers-intro__copy p {
+  margin: 0 0 16px;
+}
+
+.buyers-process {
+  padding-block: 100px 115px;
+  background: #121210;
+  border-block: 1px solid rgba(210, 174, 119, 0.13);
+}
+
+.buyers-section-heading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 50px;
+  margin-bottom: 58px;
+}
+
+.buyers-section-heading > p {
+  max-width: 340px;
+  margin: 0 0 5px;
+  color: rgba(244, 240, 232, 0.62);
+  font-size: 13px;
+  line-height: 1.8;
+}
+
+.buyers-steps {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  border-top: 1px solid rgba(210, 174, 119, 0.28);
+}
+
+.buyers-step {
+  min-height: 245px;
+  padding: 25px 24px 0 0;
+}
+
+.buyers-step + .buyers-step {
+  padding-left: 24px;
+  border-left: 1px solid rgba(210, 174, 119, 0.18);
+}
+
+.buyers-step__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #c8a878;
+  font-size: 11px;
+}
+
+.buyers-step h3 {
+  margin: 38px 0 13px;
+  font-family: var(--font-playfair), Georgia, serif;
+  font-size: 23px;
+  font-weight: 400;
+}
+
+.buyers-step p {
+  max-width: 250px;
+  margin: 0;
+  color: rgba(244, 240, 232, 0.62);
+  font-size: 12px;
+  line-height: 1.8;
+}
+
+.buyers-considerations {
+  display: grid;
+  grid-template-columns: 0.9fr 1fr;
+  gap: 90px;
+  align-items: center;
+  padding-block: 120px;
+}
+
+.buyers-considerations__image {
+  min-height: 580px;
+  background:
+    linear-gradient(0deg, rgba(10, 10, 9, 0.08), rgba(10, 10, 9, 0.08)),
+    url("https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=1200&q=85")
+      center / cover;
+}
+
+.buyers-considerations__lead {
+  margin: 25px 0 30px;
+  color: rgba(244, 240, 232, 0.66);
+  font-size: 13px;
+  line-height: 1.9;
+}
+
+.buyers-considerations ul {
+  display: grid;
+  gap: 17px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.buyers-considerations li {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  color: rgba(244, 240, 232, 0.82);
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.buyers-check {
+  flex: 0 0 21px;
+  width: 21px;
+  height: 21px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(200, 168, 120, 0.5);
+  color: #c8a878;
+}
+
+.buyers-disclaimer {
+  margin: 28px 0 0;
+  color: rgba(244, 240, 232, 0.4);
+  font-size: 10px;
+  line-height: 1.7;
+}
+
+.buyers-cta {
+  padding-block: 72px;
+  background: #171613;
+  border-top: 1px solid rgba(210, 174, 119, 0.16);
+}
+
+.buyers-cta__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 35px;
+}
+
+.buyers-cta .buyers-eyebrow {
+  margin-bottom: 15px;
+}
+
+.buyers-cta h2 {
+  max-width: 680px;
+}
+
+@media (max-width: 900px) {
+  .buyers-intro,
+  .buyers-considerations {
+    grid-template-columns: 1fr;
+    gap: 45px;
+  }
+
+  .buyers-intro {
+    padding-block: 85px;
+  }
+
+  .buyers-section-heading {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 22px;
+  }
+
+  .buyers-steps {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .buyers-step:nth-child(3) {
+    border-left: 0;
+    padding-left: 0;
+  }
+
+  .buyers-step:nth-child(n + 3) {
+    border-top: 1px solid rgba(210, 174, 119, 0.18);
+    padding-top: 25px;
+  }
+
+  .buyers-considerations__image {
+    min-height: 420px;
+  }
+}
+
+@media (max-width: 600px) {
+  .buyers-container {
+    width: min(100% - 36px, 1180px);
+  }
+
+  .buyers-hero {
+    min-height: 650px;
+  }
+
+  .buyers-hero__image {
+    background-position: 58% center;
+  }
+
+  .buyers-hero__content {
+    padding-block: 100px 65px;
+  }
+
+  .buyers-hero h1 {
+    font-size: clamp(48px, 14vw, 70px);
+  }
+
+  .buyers-hero__actions {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .buyers-hero__note {
+    margin-top: 55px;
+  }
+
+  .buyers-intro,
+  .buyers-considerations {
+    padding-block: 75px;
+  }
+
+  .buyers-process {
+    padding-block: 75px;
+  }
+
+  .buyers-steps {
+    grid-template-columns: 1fr;
+  }
+
+  .buyers-step,
+  .buyers-step + .buyers-step,
+  .buyers-step:nth-child(3) {
+    min-height: auto;
+    padding: 24px 0;
+    border-left: 0;
+    border-top: 1px solid rgba(210, 174, 119, 0.18);
+  }
+
+  .buyers-step h3 {
+    margin-top: 22px;
+  }
+
+  .buyers-considerations__image {
+    min-height: 340px;
+  }
+
+  .buyers-cta__inner {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
