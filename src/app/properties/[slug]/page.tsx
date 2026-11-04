@@ -1,4 +1,4 @@
-
+import { Suspense } from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
@@ -19,7 +19,7 @@ type PageProps = {
   params: Promise<{ slug: string }>;
 };
 
-export default async function PropertyDetailsPage({ params }: PageProps) {
+async function PropertyDetails({ params }: PageProps) {
   const { slug } = await params;
   const property = await getPropertyBySlug(slug);
 
@@ -201,5 +201,19 @@ export default async function PropertyDetailsPage({ params }: PageProps) {
         </footer>
       </div>
     </main>
+  );
+}
+
+export default function PropertyPage({ params }: PageProps) {
+  return (
+    <Suspense
+      fallback={
+        <main className="details-page">
+          <p>Loading property details...</p>
+        </main>
+      }
+    >
+      <PropertyDetails params={params} />
+    </Suspense>
   );
 }
