@@ -167,8 +167,8 @@ export default function PropertyListingPage({
           <Link href="/">Home</Link>
           <Link href="/buyers">Buyers</Link>
           <Link href="/properties" className="active">Properties</Link>
-          <Link href="/#news">News</Link>
-          <Link href="/#contact">Contact</Link>
+          <Link href="/news">News</Link>
+          <Link href="/contact">Contact</Link>
         </nav>
 
         <Link href="/#contact" className="listing-contact-link">
