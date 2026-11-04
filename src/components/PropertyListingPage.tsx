@@ -165,7 +165,7 @@ export default function PropertyListingPage({
 
         <nav className="listing-nav-links">
           <Link href="/">Home</Link>
-          <Link href="/#buyers">Buyers</Link>
+          <Link href="/buyers">Buyers</Link>
           <Link href="/properties" className="active">Properties</Link>
           <Link href="/#news">News</Link>
           <Link href="/#contact">Contact</Link>
