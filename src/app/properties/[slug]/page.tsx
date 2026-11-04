@@ -40,8 +40,8 @@ async function PropertyDetails({ params }: PageProps) {
 
         <nav>
           <Link href="/">Home</Link>
-          <Link href="/#properties">Properties</Link>
-          <Link href="/#contact">Contact</Link>
+          <Link href="/properties">Properties</Link>
+          <Link href="/contact">Contact</Link>
         </nav>
 
         <Link href="/#contact" className="details-contact">
