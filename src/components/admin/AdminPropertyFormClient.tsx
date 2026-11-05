@@ -1,6 +1,7 @@
 
 "use client";
 
+import styles from "./AdminPropertyFormClient.module.css";
 import { useEffect, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -20,7 +21,9 @@ import {
   CheckCircle2,
   AlertCircle,
 } from "lucide-react";
-import styles from "./AdminPropertyFormClient.module.css";
+
+console.log("TERRAVISTA FORM CSS:", styles);
+console.log("TERRAVISTA CSS KEYS:", Object.keys(styles));
 
 type PropertyStatus = "Published" | "Draft" | "Sold";
 
