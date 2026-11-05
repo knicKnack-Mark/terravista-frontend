@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import {
   ArrowUpRight,
@@ -134,6 +134,36 @@ export default function AdminPropertiesClient() {
   const [selectedType, setSelectedType] = useState("All");
   const [notice, setNotice] = useState("");
 
+  useEffect(() => {
+    const storageKey = "terravista-admin-properties";
+    const saved = localStorage.getItem(storageKey);
+
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+
+        if (Array.isArray(parsed)) {
+          // Browser storage is only available after hydration.
+          // eslint-disable-next-line react-hooks/set-state-in-effect
+          setProperties(parsed);
+          return;
+        }
+      } catch {
+        console.error("Unable to load saved properties.");
+      }
+    }
+
+    const initialData = initialProperties.map((property) => ({
+      ...property,
+      description: "",
+      amenities: [],
+      image: "",
+    }));
+    localStorage.setItem(storageKey, JSON.stringify(initialData));
+    localStorage.setItem(storageKey, JSON.stringify(initialData));
+    setProperties(initialData);
+  }, []);
+
   const stats = {
     total: properties.length,
     published: properties.filter((p) => p.status === "Published").length,
@@ -162,17 +192,20 @@ export default function AdminPropertiesClient() {
   }, [properties, search, activeFilter, selectedType]);
 
   function toggleStatus(id: number) {
-    setProperties((current) =>
-      current.map((property) => {
-        if (property.id !== id) return property;
+    const updated = properties.map((property) => {
+      if (property.id !== id) return property;
 
-        const nextStatus: PropertyStatus =
-          property.status === "Published" ? "Draft" : "Published";
+      const nextStatus: PropertyStatus =
+        property.status === "Published" ? "Draft" : "Published";
 
-        return { ...property, status: nextStatus };
-      }),
+      return { ...property, status: nextStatus };
+    });
+
+    setProperties(updated);
+    localStorage.setItem(
+      "terravista-admin-properties",
+      JSON.stringify(updated),
     );
-
     setNotice("Property status updated.");
   }
 
@@ -187,7 +220,13 @@ export default function AdminPropertiesClient() {
 
     if (!confirmed) return;
 
-    setProperties((current) => current.filter((item) => item.id !== id));
+    const updated = properties.filter((item) => item.id !== id);
+
+    setProperties(updated);
+    localStorage.setItem(
+      "terravista-admin-properties",
+      JSON.stringify(updated),
+    );
     setNotice("Property removed from the demo inventory.");
   }
 
@@ -432,8 +471,8 @@ export default function AdminPropertiesClient() {
       </section>
 
       <p className="admin-properties-demo-note">
-        Demo mode: changes are held in local page state and reset when you
-        refresh. No database records are changed.
+        Demo mode: changes are saved in this browser only. No database records
+        are changed.
       </p>
     </main>
   );
