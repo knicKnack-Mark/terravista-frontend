@@ -20,10 +20,10 @@ import {
   Maximize2,
   CheckCircle2,
   AlertCircle,
+  ArrowUp,
+  ArrowDown,
+  Check,
 } from "lucide-react";
-
-console.log("TERRAVISTA FORM CSS:", styles);
-console.log("TERRAVISTA CSS KEYS:", Object.keys(styles));
 
 type PropertyStatus = "Published" | "Draft" | "Sold";
 
@@ -40,6 +40,7 @@ type Property = {
   bathrooms: number;
   area: number;
   image: string;
+  images: string[];
   amenities: string[];
   [key: string]: unknown;
 };
@@ -59,6 +60,7 @@ const emptyProperty: Property = {
   bathrooms: 0,
   area: 0,
   image: "",
+  images: [],
   amenities: [],
 };
 
@@ -113,6 +115,7 @@ export default function AdminPropertyFormClient({
 
   const [form, setForm] = useState<Property>(emptyProperty);
   const [customAmenity, setCustomAmenity] = useState("");
+  const [imageUrlInput, setImageUrlInput] = useState("");
   const [slugManuallyEdited, setSlugManuallyEdited] = useState(false);
   const [loading, setLoading] = useState(mode === "edit");
   const [notFound, setNotFound] = useState(false);
@@ -142,6 +145,13 @@ export default function AdminPropertyFormClient({
         amenities: Array.isArray(existing.amenities)
           ? existing.amenities
           : [],
+        images: Array.isArray(existing.images)
+          ? existing.images.filter(
+              (image): image is string => typeof image === "string" && image.trim().length > 0
+            )
+          : existing.image
+            ? [existing.image]
+            : [],
       });
 
       setSlugManuallyEdited(true);
@@ -200,6 +210,67 @@ export default function AdminPropertyFormClient({
     );
   }
 
+  function addPropertyImage() {
+    const value = imageUrlInput.trim();
+
+    if (!value) return;
+
+    let parsedUrl: URL;
+    try {
+      parsedUrl = new URL(value);
+    } catch {
+      setError("Please enter a valid image URL.");
+      return;
+    }
+
+    if (parsedUrl.protocol !== "http:" && parsedUrl.protocol !== "https:") {
+      setError("Image URLs must start with http:// or https://.");
+      return;
+    }
+
+    if (form.images.includes(value)) {
+      setError("This image has already been added.");
+      return;
+    }
+
+    setError("");
+    setForm((current) => ({
+      ...current,
+      images: [...current.images, value],
+      image: current.image || value,
+    }));
+    setImageUrlInput("");
+  }
+
+  function removePropertyImage(imageToRemove: string) {
+    setForm((current) => {
+      const images = current.images.filter((image) => image !== imageToRemove);
+      return {
+        ...current,
+        images,
+        image:
+          current.image === imageToRemove
+            ? images[0] || ""
+            : current.image,
+      };
+    });
+  }
+
+  function setCoverImage(image: string) {
+    setForm((current) => ({ ...current, image }));
+  }
+
+  function movePropertyImage(index: number, direction: -1 | 1) {
+    setForm((current) => {
+      const nextIndex = index + direction;
+      if (nextIndex < 0 || nextIndex >= current.images.length) return current;
+
+      const images = [...current.images];
+      [images[index], images[nextIndex]] = [images[nextIndex], images[index]];
+      return { ...current, images };
+    });
+  }
+
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError("");
@@ -244,6 +315,11 @@ export default function AdminPropertyFormClient({
 
       const propertyToSave: Property = {
         ...form,
+        images: form.images.length
+          ? form.images
+          : form.image
+            ? [form.image]
+            : [],
         id: mode === "create" ? Date.now() : form.id,
         title: form.title.trim(),
         slug: form.slug.trim(),
@@ -572,42 +648,117 @@ export default function AdminPropertyFormClient({
                   <ImagePlus size={18} />
                 </div>
                 <div>
-                  <h2>Property image</h2>
-                  <p>Paste an image URL to preview it.</p>
+                  <h2>Property gallery</h2>
+                  <p>Add photos and choose the main listing image.</p>
                 </div>
               </div>
 
-              <label className={styles.field}>
-                <span>Image URL</span>
-                <input
-                  type="url"
-                  value={form.image}
-                  onChange={(event) => updateField("image", event.target.value)}
-                  placeholder="https://example.com/property.jpg"
-                />
-              </label>
-
-              <div className={styles.imagePreview}>
-                {form.image ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    src={form.image}
-                    alt={form.title || "Property preview"}
-                    onError={(event) => {
-                      event.currentTarget.style.display = "none";
+              <div className={styles.imageUrlEntry}>
+                <label className={styles.field}>
+                  <span>Image URL</span>
+                  <input
+                    type="url"
+                    value={imageUrlInput}
+                    onChange={(event) => setImageUrlInput(event.target.value)}
+                    onKeyDown={(event) => {
+                      if (event.key === "Enter") {
+                        event.preventDefault();
+                        addPropertyImage();
+                      }
                     }}
+                    placeholder="https://example.com/property.jpg"
                   />
-                ) : (
-                  <div className={styles.emptyImage}>
-                    <ImagePlus size={30} />
-                    <span>Image preview will appear here</span>
-                  </div>
-                )}
+                </label>
+                <button
+                  type="button"
+                  className={styles.addImageButton}
+                  onClick={addPropertyImage}
+                  disabled={!imageUrlInput.trim()}
+                >
+                  <Plus size={15} /> Add image
+                </button>
               </div>
 
+              <div className={styles.gallerySummary}>
+                <span>{form.images.length} {form.images.length === 1 ? "photo" : "photos"} added</span>
+                <span>Select a photo as the cover image.</span>
+              </div>
+
+              {form.images.length > 0 ? (
+                <div className={styles.imageGallery}>
+                  {form.images.map((image, index) => {
+                    const isCover = form.image === image;
+                    return (
+                      <div className={styles.galleryItem} key={`${image}-${index}`}>
+                        <div className={styles.galleryThumb}>
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img
+                            src={image}
+                            alt={`${form.title || "Property"} photo ${index + 1}`}
+                            onError={(event) => {
+                              event.currentTarget.style.opacity = "0.15";
+                            }}
+                          />
+                          {isCover && (
+                            <span className={styles.coverBadge}>
+                              <Check size={11} /> COVER
+                            </span>
+                          )}
+                        </div>
+                        <div className={styles.galleryItemActions}>
+                          <button
+                            type="button"
+                            className={`${styles.coverButton} ${isCover ? styles.coverButtonActive : ""}`}
+                            onClick={() => setCoverImage(image)}
+                            disabled={isCover}
+                          >
+                            {isCover ? "Cover image" : "Set as cover"}
+                          </button>
+                          <div className={styles.galleryTools}>
+                            <button
+                              type="button"
+                              onClick={() => movePropertyImage(index, -1)}
+                              disabled={index === 0}
+                              aria-label={`Move image ${index + 1} up`}
+                              title="Move left"
+                            >
+                              <ArrowUp size={14} />
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => movePropertyImage(index, 1)}
+                              disabled={index === form.images.length - 1}
+                              aria-label={`Move image ${index + 1} down`}
+                              title="Move right"
+                            >
+                              <ArrowDown size={14} />
+                            </button>
+                            <button
+                              type="button"
+                              className={styles.removeImageButton}
+                              onClick={() => removePropertyImage(image)}
+                              aria-label={`Remove image ${index + 1}`}
+                              title="Remove image"
+                            >
+                              <Trash2 size={14} />
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              ) : (
+                <div className={styles.galleryEmpty}>
+                  <ImagePlus size={27} />
+                  <strong>No property photos yet</strong>
+                  <span>Add an image URL above to build the gallery.</span>
+                </div>
+              )}
+
               <p className={styles.helper}>
-                Use a publicly accessible image URL. File uploads are not
-                configured in this frontend-only version.
+                Use publicly accessible image URLs. The selected cover image is
+                used in the listing preview. File uploads are not configured yet.
               </p>
             </section>
 
@@ -620,7 +771,7 @@ export default function AdminPropertyFormClient({
               <div className={styles.previewImage}>
                 {form.image ? (
                   // eslint-disable-next-line @next/next/no-img-element
-                  <img src={form.image} alt="" />
+                  <img src={form.image} alt={form.title || "Property cover"} />
                 ) : (
                   <div className={styles.emptyImage}>
                     <ImagePlus size={25} />
