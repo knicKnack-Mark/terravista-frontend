@@ -614,3 +614,226 @@
     flex: 1;
   }
 }
+
+
+/* Multiple property image gallery */
+.imageUrlEntry {
+  display: flex;
+  align-items: flex-end;
+  gap: 9px;
+}
+
+.imageUrlEntry .field {
+  flex: 1;
+}
+
+.addImageButton {
+  display: inline-flex;
+  height: 43px;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 0 12px;
+  border: 1px solid #594a35;
+  border-radius: 3px;
+  background: #292218;
+  color: #d4b586;
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 600;
+  transition: .2s ease;
+}
+
+.addImageButton:hover:not(:disabled) {
+  border-color: #b99a6b;
+  background: #342a1d;
+}
+
+.addImageButton:disabled {
+  cursor: not-allowed;
+  opacity: .45;
+}
+
+.gallerySummary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 7px;
+  margin: 17px 0 11px;
+  color: #77736b;
+  font-size: 10px;
+}
+
+.gallerySummary span:first-child {
+  color: #d0b184;
+  font-weight: 700;
+}
+
+.imageGallery {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.galleryItem {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid #38352e;
+  border-radius: 4px;
+  background: #10100e;
+}
+
+.galleryThumb {
+  position: relative;
+  height: 112px;
+  overflow: hidden;
+  background: #0c0c0b;
+}
+
+.galleryThumb img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform .25s ease;
+}
+
+.galleryItem:hover .galleryThumb img {
+  transform: scale(1.04);
+}
+
+.coverBadge {
+  position: absolute;
+  top: 7px;
+  left: 7px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 7px;
+  border: 1px solid rgba(217, 187, 139, .45);
+  border-radius: 2px;
+  background: rgba(22, 19, 14, .9);
+  color: #e0c18f;
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: .7px;
+}
+
+.galleryItemActions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 5px;
+  padding: 7px;
+}
+
+.coverButton {
+  min-width: 0;
+  overflow: hidden;
+  padding: 6px 7px;
+  border: 1px solid #50412f;
+  border-radius: 2px;
+  background: #211d16;
+  color: #d4b586;
+  cursor: pointer;
+  font-size: 9px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.coverButton:disabled,
+.coverButtonActive {
+  border-color: #6b5738;
+  background: #302719;
+  color: #e1c18e;
+  cursor: default;
+}
+
+.galleryTools {
+  display: flex;
+  flex-shrink: 0;
+  gap: 3px;
+}
+
+.galleryTools button {
+  display: grid;
+  width: 25px;
+  height: 25px;
+  place-items: center;
+  border: 1px solid #39372f;
+  border-radius: 2px;
+  background: #191916;
+  color: #b9b2a5;
+  cursor: pointer;
+}
+
+.galleryTools button:hover:not(:disabled) {
+  border-color: #9d8057;
+  color: #e0c18f;
+}
+
+.galleryTools button:disabled {
+  cursor: not-allowed;
+  opacity: .3;
+}
+
+.galleryTools .removeImageButton:hover {
+  border-color: #75423c;
+  color: #e3a39a;
+}
+
+.galleryEmpty {
+  display: flex;
+  min-height: 145px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 1px dashed #48443b;
+  border-radius: 4px;
+  background: #10100e;
+  color: #77736b;
+  text-align: center;
+}
+
+.galleryEmpty svg {
+  color: #9a8059;
+}
+
+.galleryEmpty strong {
+  color: #c8c0b2;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.galleryEmpty span {
+  color: #77736b;
+  font-size: 10px;
+}
+
+@media (max-width: 560px) {
+  .imageUrlEntry {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .addImageButton {
+    width: 100%;
+  }
+
+  .galleryThumb {
+    height: 95px;
+  }
+
+  .galleryItemActions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .galleryTools {
+    justify-content: flex-end;
+  }
+}
+
