@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -11,8 +11,7 @@ import {
   Maximize2,
   MapPin,
 } from "lucide-react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { usePropertyPageAnimations } from "@/hooks/usePropertyPageAnimations";
 import type { PropertyView } from "@/types/property";
 
 type Props = {
@@ -22,53 +21,13 @@ type Props = {
 export default function FeaturedPropertiesClient({
   properties,
 }: Props) {
+  usePropertyPageAnimations("featured");
+
   const [filter, setFilter] = useState<"all" | "buy" | "rent">("all");
 
   const visibleProperties = properties.filter((property) => {
     return filter === "all" || property.type === filter;
   });
-
-  useEffect(() => {
-    gsap.registerPlugin(ScrollTrigger);
-
-    const ctx = gsap.context(() => {
-      gsap.fromTo(
-        ".featured-heading > *",
-        { y: 30, opacity: 0 },
-        {
-          y: 0,
-          opacity: 1,
-          duration: 0.75,
-          stagger: 0.12,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: ".featured-section",
-            start: "top 78%",
-            once: true,
-          },
-        },
-      );
-
-      gsap.fromTo(
-        ".property-card",
-        { y: 35, opacity: 0 },
-        {
-          y: 0,
-          opacity: 1,
-          duration: 0.7,
-          stagger: 0.12,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: ".property-grid",
-            start: "top 82%",
-            once: true,
-          },
-        },
-      );
-    });
-
-    return () => ctx.revert();
-  }, [filter, properties]);
 
   return (
     <section className="featured-section" id="featured">
