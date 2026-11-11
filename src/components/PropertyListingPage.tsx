@@ -14,6 +14,7 @@ import {
   SlidersHorizontal,
   X,
 } from "lucide-react";
+import { usePropertyPageAnimations } from "@/hooks/usePropertyPageAnimations";
 import type { PropertyView } from "@/types/property";
 
 type PropertyType = "all" | "buy" | "rent";
@@ -32,6 +33,8 @@ type PropertyListingPageProps = {
 export default function PropertyListingPage({
   properties,
 }: PropertyListingPageProps) {
+  usePropertyPageAnimations("listing");
+
   const [search, setSearch] = useState("");
   const [propertyType, setPropertyType] = useState<PropertyType>("all");
   const [priceRange, setPriceRange] = useState("any");
