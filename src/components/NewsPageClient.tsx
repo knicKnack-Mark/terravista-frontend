@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   ArrowDownRight,
   ArrowLeft,
@@ -21,6 +21,7 @@ type Article = {
   readTime: string;
   author: string;
   content: string[];
+  image: string;
   featured?: boolean;
 };
 
@@ -35,6 +36,8 @@ const articles: Article[] = [
     readTime: "5 min read",
     author: "TerraVista Editorial",
     featured: true,
+    image:
+      "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1800&q=85",
     content: [
       "A timeless home is not defined by a single trend. It comes from a thoughtful balance of proportion, natural materials, light, and the way a space supports everyday life.",
       "Start with the essentials: a clear layout, durable finishes, and rooms that feel connected to their surroundings. Natural stone, warm wood, and restrained colors can create a calm foundation without making a home feel generic.",
@@ -50,6 +53,8 @@ const articles: Article[] = [
     date: "October 12, 2026",
     readTime: "4 min read",
     author: "TerraVista Editorial",
+    image:
+      "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1000&q=85",
     content: [
       "A successful property search begins with a clear picture of what matters most: location, budget, space, and the way you want to live.",
       "Before visiting properties, organize your priorities and make a short list of questions. Compare each home against the same criteria so the decision is based on more than first impressions.",
@@ -65,6 +70,8 @@ const articles: Article[] = [
     date: "October 5, 2026",
     readTime: "6 min read",
     author: "TerraVista Editorial",
+    image:
+      "https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=1000&q=85",
     content: [
       "Location influences much more than a property's map pin. It shapes daily routines, access to services, and the character of the community around a home.",
       "Consider how you move through the area during a typical week. Nearby amenities, transportation, green spaces, and the feel of the neighborhood can all influence how well a property fits your life.",
@@ -80,6 +87,8 @@ const articles: Article[] = [
     date: "September 27, 2026",
     readTime: "3 min read",
     author: "TerraVista Editorial",
+    image:
+      "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1000&q=85",
     content: [
       "Finishing details are often quiet, but they have a meaningful effect on how a space feels. Consistent finishes, layered lighting, and well-placed storage can make a room feel intentional.",
       "Rather than adding more, focus on choosing details that work together. A few carefully selected materials can create a stronger result than a collection of competing accents.",
@@ -94,6 +103,8 @@ const articles: Article[] = [
     date: "September 19, 2026",
     readTime: "4 min read",
     author: "TerraVista Editorial",
+    image:
+      "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1000&q=85",
     content: [
       "A viewing is an opportunity to understand how a property works in real life. Look at natural light, storage, room flow, and the condition of important features.",
       "Bring a short checklist and take notes after each visit. If something is unclear, ask questions rather than relying on assumptions.",
@@ -109,6 +120,8 @@ const articles: Article[] = [
     date: "September 10, 2026",
     readTime: "3 min read",
     author: "TerraVista Editorial",
+    image:
+      "https://images.unsplash.com/photo-1600607687644-c7171b42498f?auto=format&fit=crop&w=1000&q=85",
     content: [
       "The entrance sets the tone for the rest of a home. A clear path, considered lighting, and a place to put everyday essentials can make arriving feel effortless.",
       "A sense of arrival does not require a large space. Even a compact entry can feel welcoming when it is organized and reflects the character of the home.",
@@ -122,6 +135,10 @@ export default function NewsPageClient() {
   const [activeCategory, setActiveCategory] = useState("All");
   const [search, setSearch] = useState("");
   const [selectedArticle, setSelectedArticle] = useState<Article | null>(null);
+
+  const modalRef = useRef<HTMLElement>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const previousFocusRef = useRef<HTMLElement | null>(null);
 
   const featured = articles.find((article) => article.featured)!;
 
@@ -137,11 +154,70 @@ export default function NewsPageClient() {
       .filter(
         (article) =>
           !query ||
-          `${article.title} ${article.excerpt} ${article.category}`
+          `${article.title} ${article.excerpt} ${article.category} ${article.content.join(" ")}`
             .toLowerCase()
             .includes(query),
       );
   }, [activeCategory, search]);
+
+  const openArticle = (article: Article) => {
+    previousFocusRef.current =
+      document.activeElement instanceof HTMLElement
+        ? document.activeElement
+        : null;
+
+    setSelectedArticle(article);
+  };
+
+  const closeArticle = () => {
+    setSelectedArticle(null);
+  };
+
+  useEffect(() => {
+    if (!selectedArticle) return;
+
+    const previousOverflow = document.body.style.overflow;
+
+    document.body.style.overflow = "hidden";
+    closeButtonRef.current?.focus();
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        closeArticle();
+        return;
+      }
+
+      if (event.key !== "Tab" || !modalRef.current) return;
+
+      const focusableElements = modalRef.current.querySelectorAll<HTMLElement>(
+        'button, a[href], input, [tabindex]:not([tabindex="-1"])',
+      );
+
+      if (focusableElements.length === 0) return;
+
+      const firstElement = focusableElements[0];
+      const lastElement = focusableElements[focusableElements.length - 1];
+
+      if (event.shiftKey && document.activeElement === firstElement) {
+        event.preventDefault();
+        lastElement.focus();
+      } else if (
+        !event.shiftKey &&
+        document.activeElement === lastElement
+      ) {
+        event.preventDefault();
+        firstElement.focus();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener("keydown", handleKeyDown);
+      previousFocusRef.current?.focus();
+    };
+  }, [selectedArticle]);
 
   return (
     <main className="news-page">
@@ -158,6 +234,7 @@ export default function NewsPageClient() {
               <br />
               <em>the way you live.</em>
             </h1>
+
             <p>
               Thoughtful perspectives on property, design, and finding a place
               to call your own.
@@ -179,18 +256,17 @@ export default function NewsPageClient() {
 
         <button
           className="news-featured-card"
-          onClick={() => setSelectedArticle(featured)}
+          onClick={() => openArticle(featured)}
           aria-label={`Read ${featured.title}`}
         >
-          <div className="news-featured-art">
-            <div className="news-art-orbit news-art-orbit-one" />
-            <div className="news-art-orbit news-art-orbit-two" />
-            <div className="news-art-building">
-              <span />
-              <span />
-              <span />
-              <span />
-            </div>
+          <div
+            className="news-featured-art"
+            style={{
+              backgroundImage: `linear-gradient(0deg, rgba(8, 8, 7, 0.35), rgba(8, 8, 7, 0.04)), url("${featured.image}")`,
+            }}
+            role="img"
+            aria-label="Elegant contemporary residential interior"
+          >
             <span className="news-art-caption">THE ART OF LIVING WELL</span>
           </div>
 
@@ -200,8 +276,10 @@ export default function NewsPageClient() {
               <span>·</span>
               <span>{featured.readTime}</span>
             </div>
+
             <h2>{featured.title}</h2>
             <p>{featured.excerpt}</p>
+
             <span className="news-read-link">
               Read the story <ArrowUpRight size={16} />
             </span>
@@ -213,25 +291,44 @@ export default function NewsPageClient() {
         <div className="news-library-heading">
           <div>
             <div className="news-section-label">02 / EXPLORE THE JOURNAL</div>
-            <h2>Ideas worth <em>keeping.</em></h2>
+            <h2>
+              Ideas worth <em>keeping.</em>
+            </h2>
           </div>
 
           <label className="news-search">
             <Search size={17} />
+
             <input
               value={search}
               onChange={(event) => setSearch(event.target.value)}
               placeholder="Search articles"
               aria-label="Search articles"
             />
+
+            {search && (
+              <button
+                type="button"
+                className="news-search-clear"
+                onClick={() => setSearch("")}
+                aria-label="Clear search"
+              >
+                <X size={15} />
+              </button>
+            )}
           </label>
         </div>
 
-        <div className="news-filters" aria-label="Filter articles by category">
+        <div
+          className="news-filters"
+          aria-label="Filter articles by category"
+        >
           {categories.map((category) => (
             <button
+              type="button"
               key={category}
               className={activeCategory === category ? "active" : ""}
+              aria-pressed={activeCategory === category}
               onClick={() => setActiveCategory(category)}
             >
               {category}
@@ -239,13 +336,36 @@ export default function NewsPageClient() {
           ))}
         </div>
 
+        <div className="news-results-line">
+          <span>
+            {filteredArticles.length}{" "}
+            {filteredArticles.length === 1 ? "STORY" : "STORIES"}
+          </span>
+
+          {(search || activeCategory !== "All") && (
+            <button
+              type="button"
+              onClick={() => {
+                setSearch("");
+                setActiveCategory("All");
+              }}
+            >
+              Reset filters <X size={13} />
+            </button>
+          )}
+        </div>
+
         {filteredArticles.length > 0 ? (
           <div className="news-grid">
             {filteredArticles.map((article, index) => (
               <article className="news-card" key={article.slug}>
                 <button
+                  type="button"
                   className={`news-card-art news-card-art-${index % 3}`}
-                  onClick={() => setSelectedArticle(article)}
+                  style={{
+                    backgroundImage: `linear-gradient(0deg, rgba(8, 8, 7, 0.55), rgba(8, 8, 7, 0.04)), url("${article.image}")`,
+                  }}
+                  onClick={() => openArticle(article)}
                   aria-label={`Read ${article.title}`}
                 >
                   <span>{article.category}</span>
@@ -258,11 +378,14 @@ export default function NewsPageClient() {
                     <span>·</span>
                     <span>{article.readTime}</span>
                   </div>
+
                   <h3>{article.title}</h3>
                   <p>{article.excerpt}</p>
+
                   <button
+                    type="button"
                     className="news-card-link"
-                    onClick={() => setSelectedArticle(article)}
+                    onClick={() => openArticle(article)}
                   >
                     Read article <ArrowRight size={15} />
                   </button>
@@ -272,8 +395,11 @@ export default function NewsPageClient() {
           </div>
         ) : (
           <div className="news-empty">
-            <p>No articles match that search.</p>
+            <p>No articles match your search.</p>
+            <span>Try another keyword or explore a different category.</span>
+
             <button
+              type="button"
               onClick={() => {
                 setSearch("");
                 setActiveCategory("All");
@@ -288,8 +414,11 @@ export default function NewsPageClient() {
       <section className="news-bottom-cta">
         <div>
           <span className="news-section-label">YOUR NEXT CHAPTER</span>
-          <h2>Find a place that feels like <em>you.</em></h2>
+          <h2>
+            Find a place that feels like <em>you.</em>
+          </h2>
         </div>
+
         <a href="/properties">
           Explore properties <ArrowUpRight size={17} />
         </a>
@@ -301,26 +430,34 @@ export default function NewsPageClient() {
           role="presentation"
           onMouseDown={(event) => {
             if (event.target === event.currentTarget) {
-              setSelectedArticle(null);
+              closeArticle();
             }
           }}
         >
           <article
+            ref={modalRef}
             className="news-modal"
             role="dialog"
             aria-modal="true"
             aria-labelledby="news-modal-title"
+            tabIndex={-1}
           >
             <button
+              ref={closeButtonRef}
+              type="button"
               className="news-modal-close"
-              onClick={() => setSelectedArticle(null)}
+              onClick={closeArticle}
               aria-label="Close article"
             >
               <X size={20} />
             </button>
 
-            <div className="news-modal-category">{selectedArticle.category}</div>
+            <div className="news-modal-category">
+              {selectedArticle.category}
+            </div>
+
             <h2 id="news-modal-title">{selectedArticle.title}</h2>
+
             <div className="news-meta news-modal-meta">
               <CalendarDays size={14} />
               <span>{selectedArticle.date}</span>
@@ -328,15 +465,28 @@ export default function NewsPageClient() {
               <Clock3 size={14} />
               <span>{selectedArticle.readTime}</span>
             </div>
+
+            <div
+              className="news-modal-image"
+              style={{
+                backgroundImage: `url("${selectedArticle.image}")`,
+              }}
+              role="img"
+              aria-label="Property and interior design photography"
+            />
+
             <p className="news-modal-intro">{selectedArticle.excerpt}</p>
+
             <div className="news-modal-content">
-              {selectedArticle.content.map((paragraph) => (
-                <p key={paragraph}>{paragraph}</p>
+              {selectedArticle.content.map((paragraph, index) => (
+                <p key={`${selectedArticle.slug}-${index}`}>{paragraph}</p>
               ))}
             </div>
+
             <div className="news-modal-footer">
               <span>Written by {selectedArticle.author}</span>
-              <button onClick={() => setSelectedArticle(null)}>
+
+              <button type="button" onClick={closeArticle}>
                 <ArrowLeft size={15} /> Back to journal
               </button>
             </div>
