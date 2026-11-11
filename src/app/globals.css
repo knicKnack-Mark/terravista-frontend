@@ -5017,3 +5017,35 @@ button {
     animation-iteration-count: 1 !important;
   }
 }
+
+/* =========================================
+   GSAP ANIMATION PERFORMANCE
+========================================= */
+
+.property-card,
+.listing-property-card {
+  backface-visibility: hidden;
+  transform: translateZ(0);
+}
+
+.property-card-image img,
+.listing-card-image img {
+  backface-visibility: hidden;
+}
+
+.featured-heading,
+.listing-hero-inner,
+.listing-section-heading {
+  will-change: transform, opacity;
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .featured-section *,
+  .listing-page * {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
