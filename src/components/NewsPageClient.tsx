@@ -137,6 +137,7 @@ export default function NewsPageClient() {
   const [search, setSearch] = useState("");
   const [selectedArticle, setSelectedArticle] = useState<Article | null>(null);
 
+  const pageRef = useRef<HTMLElement>(null);
   const modalRef = useRef<HTMLElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const previousFocusRef = useRef<HTMLElement | null>(null);
@@ -160,6 +161,193 @@ export default function NewsPageClient() {
             .includes(query),
       );
   }, [activeCategory, search]);
+
+  // Main page entrance and scroll animations
+  useEffect(() => {
+    gsap.registerPlugin(ScrollTrigger);
+
+    const ctx = gsap.context(() => {
+      const media = gsap.matchMedia();
+
+      media.add("(prefers-reduced-motion: no-preference)", () => {
+        const heroTimeline = gsap.timeline({
+          defaults: {
+            ease: "power3.out",
+          },
+        });
+
+        heroTimeline
+          .from(".news-eyebrow", {
+            opacity: 0,
+            y: 18,
+            duration: 0.8,
+          })
+          .from(
+            ".news-hero h1",
+            {
+              opacity: 0,
+              y: 45,
+              duration: 1.1,
+            },
+            "-=0.45",
+          )
+          .from(
+            ".news-hero-heading p",
+            {
+              opacity: 0,
+              y: 22,
+              duration: 0.8,
+            },
+            "-=0.65",
+          )
+          .from(
+            ".news-hero-mark",
+            {
+              opacity: 0,
+              x: 25,
+              duration: 0.8,
+            },
+            "-=0.7",
+          );
+
+        gsap.from(".news-featured", {
+          opacity: 0,
+          y: 65,
+          duration: 1,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: ".news-featured",
+            start: "top 82%",
+            once: true,
+          },
+        });
+
+        gsap.from(".news-featured-art", {
+          clipPath: "inset(0 100% 0 0)",
+          duration: 1.3,
+          ease: "power3.inOut",
+          scrollTrigger: {
+            trigger: ".news-featured-card",
+            start: "top 80%",
+            once: true,
+          },
+        });
+
+        gsap.from(".news-featured-copy > *", {
+          opacity: 0,
+          y: 25,
+          duration: 0.75,
+          stagger: 0.13,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: ".news-featured-copy",
+            start: "top 85%",
+            once: true,
+          },
+        });
+
+        gsap.from(".news-library-heading > *", {
+          opacity: 0,
+          y: 35,
+          duration: 0.8,
+          stagger: 0.15,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: ".news-library-heading",
+            start: "top 85%",
+            once: true,
+          },
+        });
+
+        gsap.from(".news-filters button", {
+          opacity: 0,
+          y: 15,
+          duration: 0.5,
+          stagger: 0.07,
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: ".news-filters",
+            start: "top 90%",
+            once: true,
+          },
+        });
+
+        gsap.utils.toArray<HTMLElement>(".news-card").forEach((card) => {
+          gsap.from(card, {
+            opacity: 0,
+            y: 55,
+            scale: 0.97,
+            duration: 0.8,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: card,
+              start: "top 90%",
+              once: true,
+            },
+          });
+        });
+
+        gsap.from(".news-bottom-cta", {
+          opacity: 0,
+          y: 55,
+          duration: 1,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: ".news-bottom-cta",
+            start: "top 88%",
+            once: true,
+          },
+        });
+      });
+
+      return () => media.revert();
+    }, pageRef);
+
+    return () => ctx.revert();
+  }, []);
+
+  // Article modal entrance animation
+  useEffect(() => {
+    if (!selectedArticle) return;
+
+    const prefersReducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+
+    if (prefersReducedMotion) return;
+
+    const ctx = gsap.context(() => {
+      gsap.fromTo(
+        ".news-modal-backdrop",
+        {
+          opacity: 0,
+        },
+        {
+          opacity: 1,
+          duration: 0.35,
+          ease: "power2.out",
+        },
+      );
+
+      gsap.fromTo(
+        ".news-modal",
+        {
+          opacity: 0,
+          y: 45,
+          scale: 0.96,
+        },
+        {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          duration: 0.65,
+          ease: "power3.out",
+        },
+      );
+    });
+
+    return () => ctx.revert();
+  }, [selectedArticle]);
 
   const openArticle = (article: Article) => {
     previousFocusRef.current =
@@ -221,7 +409,7 @@ export default function NewsPageClient() {
   }, [selectedArticle]);
 
   return (
-    <main className="news-page">
+    <main className="news-page" ref={pageRef}>
       <section className="news-hero">
         <div className="news-eyebrow">
           <span />
