@@ -4945,3 +4945,75 @@ button {
     font-size: 31px;
   }
 }
+
+/* =========================================
+   TERRAVISTA — GSAP ANIMATION REFINEMENTS
+========================================= */
+
+/* Smooth card hover */
+.news-card-art {
+  transition:
+    transform 700ms cubic-bezier(0.2, 0.7, 0.2, 1),
+    filter 400ms ease;
+}
+
+.news-card:hover .news-card-art {
+  filter: brightness(1.12);
+}
+
+.news-card-art svg {
+  transition:
+    transform 350ms ease,
+    opacity 350ms ease;
+}
+
+.news-card:hover .news-card-art svg {
+  transform: translate(4px, -4px);
+}
+
+/* Featured article hover */
+.news-featured-art {
+  transition: transform 900ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.news-featured-card:hover .news-featured-art {
+  transform: scale(1.025);
+}
+
+/* Buttons */
+.news-read-link,
+.news-card-link,
+.news-bottom-cta a {
+  transition:
+    gap 300ms ease,
+    color 300ms ease;
+}
+
+.news-featured-card:hover .news-read-link,
+.news-card-link:hover,
+.news-bottom-cta a:hover {
+  gap: 16px;
+  color: #e0c69e;
+}
+
+/* Modal */
+.news-modal-backdrop {
+  will-change: opacity;
+}
+
+.news-modal {
+  transform-origin: center center;
+  will-change: transform, opacity;
+}
+
+/* Respect reduced-motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .news-page *,
+  .news-page *::before,
+  .news-page *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
